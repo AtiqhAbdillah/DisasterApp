@@ -5,10 +5,21 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.disasterapp.databinding.ItemDisasterBinding
 
-class DisasterAdapter : RecyclerView.Adapter<DisasterAdapter.ItemDisasterViewHolder>() {
+typealias OnClickDisaster = (Disaster) -> Unit
+class DisasterAdapter (private val listDisaster : List<Disaster>, private val onClickDisaster: OnClickDisaster) : RecyclerView.Adapter<DisasterAdapter.ItemDisasterViewHolder>() {
 
-    class ItemDisasterViewHolder(val binding: ItemDisasterBinding) :
-        RecyclerView.ViewHolder(binding.root)
+    inner class ItemDisasterViewHolder(val binding: ItemDisasterBinding) :
+        RecyclerView.ViewHolder(binding.root){
+        fun bind(data: Disaster) {
+            with(binding) {
+                txtDisasterName.text = data.nameDisaster
+                txtDisasterType.text = data.disasterType
+                itemView.setOnClickListener {
+                    onClickDisaster(data)
+                }
+            }
+        }
+        }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemDisasterViewHolder {
         val binding =
@@ -17,11 +28,12 @@ class DisasterAdapter : RecyclerView.Adapter<DisasterAdapter.ItemDisasterViewHol
     }
 
     override fun getItemCount(): Int {
-        return 5
+        return listDisaster.size
     }
 
     override fun onBindViewHolder(holder: ItemDisasterViewHolder, position: Int) {
         // mengatur data untuk setiap item
-        // contoh: holder.binding.tvTitle.text = "Bencana ke-${position + 1}"
+        holder.bind(listDisaster[position])
     }
+
 }
